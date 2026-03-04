@@ -1,7 +1,7 @@
 ﻿namespace Bingo
 {
-    internal class Program
-    {
+	internal class Program
+	{
 		static void Main(string[] args)
 		{
 			List<BingoJatekos> jatekosok = new List<BingoJatekos>();
@@ -9,10 +9,46 @@
 			foreach (string nev in jatekosNevek)
 			{
 				BingoJatekos jatekos = new BingoJatekos(nev);
-				jatekos.Kereses(nev);
+				jatekos.Kereses(nev); 
 				jatekosok.Add(jatekos);
 			}
 			Console.WriteLine("4. feladat: A játékosok száma: " + jatekosok.Count);
+
+			Random rand = new Random();
+			HashSet<int> kihuzottSzamok = new HashSet<int>();
+			List<int> kihuzottSzamokLista = new List<int>();
+
+			int sorsoltSzamIndex = 0;
+
+			Console.WriteLine("7. feladat: Kihúzott számok");
+			while (true)
+			{
+				int szam = rand.Next(1, 76);
+				if (!kihuzottSzamok.Contains(szam))
+				{
+					kihuzottSzamok.Add(szam);
+					kihuzottSzamokLista.Add(szam);
+					sorsoltSzamIndex++;
+					Console.Write($"{sorsoltSzamIndex}.->{szam}" + " ");
+
+					foreach (var jatekos in jatekosok)
+					{
+						jatekos.SorsoltSzamotJelol(szam.ToString());  
+					}
+
+					foreach (var jatekos in jatekosok)
+					{
+						if (jatekos.BingoEll())
+						{
+							Console.WriteLine();
+							Console.WriteLine("8. feladat: Lehetséges nyertes(ek):");
+							Console.WriteLine($"{jatekos.Nev}:");
+							jatekos.Megjelenites(kihuzottSzamokLista);  
+							return;  
+						}
+					}
+				}
+			}
 		}
 	}
 }
