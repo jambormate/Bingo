@@ -45,5 +45,58 @@ namespace Bingo
 				if (talalt) break;
 			}
 		}
+		public bool BingoEll()
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				bool teljesSor = true;
+				for (int j = 0; j < 5; j++)
+				{
+					if (Kartyanap[i, j] != "X")
+					{
+						teljesSor = false;
+						break;
+					}
+				}
+				if (teljesSor) return true;
+			}
+
+			for (int j = 0; j < 5; j++)
+			{
+				bool teljesOszlop = true;
+				for (int i = 0; i < 5; i++)
+				{
+					if (Kartyanap[i, j] != "X")
+					{
+						teljesOszlop = false;
+						break;
+					}
+				}
+				if (teljesOszlop) return true;
+			}
+			bool foAtlo = true;
+			for (int i = 0; i < 5; i++)
+			{
+				if (Kartyanap[i, i] != "X")
+				{
+					foAtlo = false;
+					break;
+				}
+			}
+			if (foAtlo) return true;
+
+			bool mellekAtlo = true;
+			for (int i = 0; i < 5; i++)
+			{
+				if (Kartyanap[i, 4 - i] != "X")
+				{
+					mellekAtlo = false;
+					break;
+				}
+			}
+			if (mellekAtlo) return true;
+
+			return false;
+		}
 	}
 }
