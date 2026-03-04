@@ -9,126 +9,118 @@ namespace Bingo
 	internal class BingoJatekos
 	{
 		public string Nev { get; set; }
-		public string[,] Kartyanap { get; set; }
-		public BingoJatekos(string nev)
-		{
-			Nev = nev;
-			Kartyanap = new string[5, 5];
-		}
-		public void Kereses(string fajlnev)
-		{
-			string[] sorok = File.ReadAllLines(fajlnev); 
-			for (int i = 0; i < 5; i++)
-			{
-				string[] szamok = sorok[i].Split(';'); 
-				for (int j = 0; j < 5; j++)
-				{
-					Kartyanap[i, j] = szamok[j].Trim(); 
-				}
-			}
-		}
-		public void SorsoltSzamotJelol(string sorsoltSzam)
-		{
-			bool talalt = false;
+        public string[,] Kartya { get; set; }
+        public bool[,] Jelolve { get; set; }
+        public BingoJatekos(string nev)
+        {
+            Nev = nev;
+            Kartya = new string[5, 5];
+            Jelolve = new bool[5, 5];
+        }
+        public void Kereses(string fajlnev)
+        {
+            string[] sorok = File.ReadAllLines(fajlnev);
 
-			for (int i = 0; i < 5; i++)
-			{
-				for (int j = 0; j < 5; j++)
-				{
-					if (Kartyanap[i, j] == sorsoltSzam) 
-					{
-						Kartyanap[i, j] = "X";  
-						talalt = true;
-						break;
-					}
-				}
-				if (talalt) break; 
-			}
-		}
-		public bool BingoEll()
-		{
-			for (int i = 0; i < 5; i++)
-			{
-				bool teljesSor = true;
-				for (int j = 0; j < 5; j++)
-				{
-					if (Kartyanap[i, j] != "X")  
-					{
-						teljesSor = false;
-						break;
-					}
-				}
-				if (teljesSor) return true;  
-			}
+            for (int i = 0; i < 5; i++)
+            {
+                string[] szamok = sorok[i].Split(';');
 
-			for (int j = 0; j < 5; j++)
-			{
-				bool teljesOszlop = true;
-				for (int i = 0; i < 5; i++)
-				{
-					if (Kartyanap[i, j] != "X")  
-					{
-						teljesOszlop = false;
-						break;
-					}
-				}
-				if (teljesOszlop) return true;  
-			}
-			bool foAtlo = true;
-			for (int i = 0; i < 5; i++)
-			{
-				if (Kartyanap[i, i] != "X")  
-				{
-					foAtlo = false;
-					break;
-				}
-			}
-			if (foAtlo) return true;  
+                for (int j = 0; j < 5; j++)
+                {
+                    Kartya[i, j] = szamok[j].Trim();
+                }
+            }
 
-			bool mellekAtlo = true;
-			for (int i = 0; i < 5; i++)
-			{
-				if (Kartyanap[i, 4 - i] != "X")  
-				{
-					mellekAtlo = false;
-					break;
-				}
-			}
-			if (mellekAtlo) return true; 
+            Kartya[2, 2] = "X";
+            Jelolve[2, 2] = true;
+        }
+        public void SorsoltSzamotJelol(string sorsoltSzam)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    if (Kartya[i, j] == sorsoltSzam)
+                    {
+                        Jelolve[i, j] = true;
+                    }
+                }
+            }
+        }
+        public bool BingoEll()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                bool teljesSor = true;
+                for (int j = 0; j < 5; j++)
+                {
+                    if (!Jelolve[i, j])
+                    {
+                        teljesSor = false;
+                        break;
+                    }
+                }
+                if (teljesSor) return true;
+            }
 
-			return false; 
-		}
-		public void Megjelenites(List<int> kihuzottSzamokLista)
-		{
-			for (int i = 0; i < 5; i++)
-			{
-				for (int j = 0; j < 5; j++)
-				{
-					if (i == 2 && j == 2)
-					{
-						Console.Write(" X ");  
-					}
-					else
-					{
-						if (int.TryParse(Kartyanap[i, j], out int szam)) 
-						{
-							if (kihuzottSzamokLista.Contains(szam))
-							{
-								Console.Write($" {szam} "); 
-							}
-							else
-							{
-								Console.Write($" 0 ");  
-							}
-						}
-						else
-						{
-							Console.Write(" 0 ");  
-						}
-					}
-				}
-				Console.WriteLine();  
-			}
-		}
-	}
+            for (int j = 0; j < 5; j++)
+            {
+                bool teljesOszlop = true;
+                for (int i = 0; i < 5; i++)
+                {
+                    if (!Jelolve[i, j])
+                    {
+                        teljesOszlop = false;
+                        break;
+                    }
+                }
+                if (teljesOszlop) return true;
+            }
+            bool foAtlo = true;
+            for (int i = 0; i < 5; i++)
+            {
+                if (!Jelolve[i, i])
+                {
+                    foAtlo = false;
+                    break;
+                }
+            }
+            if (foAtlo) return true;
+
+            bool mellekAtlo = true;
+            for (int i = 0; i < 5; i++)
+            {
+                if (!Jelolve[i, 4 - i])
+                {
+                    mellekAtlo = false;
+                    break;
+                }
+            }
+            if (mellekAtlo) return true;
+
+            return false;
+        }
+        public void Megjelenites()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    if (i == 2 && j == 2)
+                    {
+                        Console.Write($"{"X",3}");
+                    }
+                    else if (Jelolve[i, j])
+                    {
+                        Console.Write($"{Kartya[i, j],3}");
+                    }
+                    else
+                    {
+                        Console.Write($"{0,3}");
+                    }
+                }
+                Console.WriteLine();
+            }
+        }
+    }
 }

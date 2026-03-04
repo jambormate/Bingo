@@ -20,35 +20,48 @@
 
 			int sorsoltSzamIndex = 0;
 
-			Console.WriteLine("7. feladat: Kihúzott számok");
-			while (true)
-			{
-				int szam = rand.Next(1, 76);
-				if (!kihuzottSzamok.Contains(szam))
-				{
-					kihuzottSzamok.Add(szam);
-					kihuzottSzamokLista.Add(szam);
-					sorsoltSzamIndex++;
-					Console.Write($"{sorsoltSzamIndex}.->{szam}" + " ");
+            Console.WriteLine("7. feladat: Kihúzott számok");
 
-					foreach (var jatekos in jatekosok)
-					{
-						jatekos.SorsoltSzamotJelol(szam.ToString());  
-					}
+            while (true)
+            {
+                int szam = rand.Next(1, 76);
+                if (!kihuzottSzamok.Contains(szam))
+                {
+                    kihuzottSzamok.Add(szam);
+                    kihuzottSzamokLista.Add(szam);
+                    sorsoltSzamIndex++;
 
-					foreach (var jatekos in jatekosok)
-					{
-						if (jatekos.BingoEll())
-						{
-							Console.WriteLine();
-							Console.WriteLine("8. feladat: Lehetséges nyertes(ek):");
-							Console.WriteLine($"{jatekos.Nev}:");
-							jatekos.Megjelenites(kihuzottSzamokLista);  
-							return;  
-						}
-					}
-				}
-			}
-		}
+                    Console.Write($"{sorsoltSzamIndex,2}.->{szam,-2} ");
+
+                    foreach (var jatekos in jatekosok)
+                    {
+                        jatekos.SorsoltSzamotJelol(szam.ToString());
+                    }
+
+                    List<BingoJatekos> nyertesek = new List<BingoJatekos>();
+
+                    foreach (var jatekos in jatekosok)
+                    {
+                        if (jatekos.BingoEll())
+                        {
+                            nyertesek.Add(jatekos);
+                        }
+                    }
+
+                    if (nyertesek.Count > 0)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("8. feladat: Lehetséges nyertes(ek):");
+
+                        foreach (var nyertes in nyertesek)
+                        {
+                            Console.WriteLine(nyertes.Nev + ":");
+                            nyertes.Megjelenites();
+                        }
+                        break;
+                    }
+                }
+            }
+        }
 	}
 }
