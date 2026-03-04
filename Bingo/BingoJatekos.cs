@@ -27,5 +27,23 @@ namespace Bingo
 				}
 			}
 		}
+		public void SorsoltSzamotJelol(string sorsoltSzam)
+		{
+			bool talalt = false;
+
+			for (int i = 0; i < 5; i++)
+			{
+				for (int j = 0; j < 5; j++)
+				{
+					if (Kartyanap[i, j] == sorsoltSzam)
+					{
+						Kartyanap[i, j] = "X";
+						talalt = true;
+						break;
+					}
+				}
+				if (talalt) break;
+			}
+		}
 	}
 }
